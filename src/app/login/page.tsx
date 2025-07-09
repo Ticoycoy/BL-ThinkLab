@@ -19,12 +19,11 @@ export default function LoginPage() {
                 <p className="text-xl text-primary-foreground/80">Welcome to BL-Research Flow!</p>
             </div>
             <Image
-                src="https://placehold.co/400x300.png"
-                alt="Productivity illustration"
+                src="/brightlocal-logo.png"
+                alt="Brightlocal Logo"
                 width={400}
                 height={300}
-                data-ai-hint="collaboration security"
-                className="rounded-lg"
+                className="rounded-lg object-contain"
             />
         </div>
       </div>
