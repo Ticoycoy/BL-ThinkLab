@@ -8,6 +8,8 @@ import { TaskForm } from "@/components/task-form";
 import { TaskPrioritizer } from "@/components/task-prioritizer";
 import type { Task, TaskStatus, Team } from "@/types";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { collection, onSnapshot, addDoc, updateDoc, deleteDoc, doc, Timestamp } from "firebase/firestore";
+import { db } from "@/lib/firebase";
 
 const statusDisplay: Record<TaskStatus, string> = {
   Pending: "Pending",
@@ -29,34 +31,53 @@ export function TaskDashboard() {
   const [activeTeam, setActiveTeam] = useState<Team>(TEAMS[0]);
 
   useEffect(() => {
-    const initialTasks: Task[] = [
-      { id: '1', name: 'Design homepage mockups', description: 'Create high-fidelity mockups for the new homepage.', assignee: 'Alice', deadline: new Date(new Date().setDate(new Date().getDate() + 5)), status: 'Working', team: 'Research Team', currentCount: 5, expectedCount: 10 },
-      { id: '2', name: 'Develop API for user authentication', description: 'Set up endpoints for user login and registration.', assignee: 'Bob', deadline: new Date(new Date().setDate(new Date().getDate() + 7)), status: 'Pending', team: 'Connection Team', currentCount: 0, expectedCount: 1 },
-      { id: '3', name: 'Setup database schema', description: 'Define and migrate the initial database schema.', assignee: 'Alice', deadline: new Date(new Date().setDate(new Date().getDate() + 3)), status: 'Working', team: 'Research Team', currentCount: 1, expectedCount: 1 },
-      { id: '4', name: 'Implement frontend login page', description: 'Build the login page UI and connect to the API.', assignee: 'Charlie', deadline: new Date(new Date().setDate(new Date().getDate() + 10)), status: 'Pending', team: 'Connection Team', currentCount: 0, expectedCount: 5 },
-      { id: '5', name: 'Write documentation for API', description: 'Document all public API endpoints.', assignee: 'David', deadline: new Date(new Date().setDate(new Date().getDate() + 14)), status: 'Done', team: 'Special task team', currentCount: 20, expectedCount: 20 },
-      { id: '6', name: 'Deploy application to staging', description: 'Deploy the latest version to the staging environment.', assignee: 'Erin', deadline: new Date(new Date().setDate(new Date().getDate() + 20)), status: 'Pending', team: 'Special task team', currentCount: 0, expectedCount: 1 },
-    ];
-    setTasks(initialTasks);
+    const unsubscribe = onSnapshot(collection(db, "tasks"), (snapshot) => {
+      const tasksData = snapshot.docs.map(doc => {
+        const data = doc.data();
+        return {
+          id: doc.id,
+          name: data.name,
+          description: data.description,
+          assignee: data.assignee,
+          deadline: (data.deadline as Timestamp).toDate(),
+          status: data.status,
+          team: data.team,
+          currentCount: data.currentCount,
+          expectedCount: data.expectedCount,
+        } as Task;
+      });
+      setTasks(tasksData);
+    });
+
+    return () => unsubscribe();
   }, []);
 
-  const handleAddTask = (task: Omit<Task, 'id' | 'status'>) => {
-    const newTask: Task = {
-      ...task,
-      id: crypto.randomUUID(),
-      status: 'Pending',
-    };
-    setTasks((prev) => [...prev, newTask]);
+  const handleAddTask = async (task: Omit<Task, 'id' | 'status'>) => {
+    try {
+      await addDoc(collection(db, "tasks"), {
+        ...task,
+        status: 'Pending',
+      });
+    } catch (error) {
+        console.error("Error adding task: ", error);
+    }
   };
 
-  const handleUpdateTask = (updatedTask: Task) => {
-    setTasks((prev) =>
-      prev.map((task) => (task.id === updatedTask.id ? updatedTask : task))
-    );
+  const handleUpdateTask = async (updatedTask: Task) => {
+    const { id, ...taskData } = updatedTask;
+    try {
+      await updateDoc(doc(db, "tasks", id), taskData);
+    } catch (error) {
+        console.error("Error updating task: ", error);
+    }
   };
   
-  const handleDeleteTask = (taskId: string) => {
-    setTasks((prev) => prev.filter((task) => task.id !== taskId));
+  const handleDeleteTask = async (taskId: string) => {
+    try {
+        await deleteDoc(doc(db, "tasks", taskId));
+    } catch (error) {
+        console.error("Error deleting task: ", error);
+    }
   };
   
   const openEditForm = (task: Task) => {
