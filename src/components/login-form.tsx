@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { signInWithEmailAndPassword, createUserWithEmailAndPassword } from "firebase/auth";
+import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth } from "@/lib/firebase";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,23 +12,42 @@ import { useToast } from "@/hooks/use-toast";
 export function LoginForm() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [fullName, setFullName] = useState('');
+  const [displayName, setDisplayName] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isLogin, setIsLogin] = useState(true);
   const { toast } = useToast();
 
   const handleAuthAction = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
+
+    if (!isLogin) {
+      if (!fullName || !displayName || !email || !password || !confirmPassword) {
+        toast({ title: "All fields are required.", variant: "destructive" });
+        return;
+      }
+      if (password !== confirmPassword) {
+        toast({ title: "Passwords do not match.", variant: "destructive" });
+        return;
+      }
+    } else {
+      if (!email || !password) {
         toast({ title: "Email and password are required.", variant: "destructive" });
         return;
+      }
     }
+
     setIsLoading(true);
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
         // The AuthProvider will handle the redirect on successful login.
       } else {
-        await createUserWithEmailAndPassword(auth, email, password);
+        const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(userCredential.user, {
+          displayName: displayName
+        });
         // The AuthProvider will handle the redirect on successful sign-up.
       }
     } catch (error: any) {
@@ -62,6 +81,18 @@ export function LoginForm() {
           <p className="text-muted-foreground">{isLogin ? 'Enter your credentials to access your dashboard.' : 'Fill in the details to get started.'}</p>
       </div>
       <form onSubmit={handleAuthAction} className="space-y-4">
+          {!isLogin && (
+            <>
+              <div className="space-y-1.5">
+                <Label htmlFor="fullName">Full Name</Label>
+                <Input id="fullName" type="text" placeholder="e.g., John Doe" value={fullName} onChange={(e) => setFullName(e.target.value)} required />
+              </div>
+              <div className="space-y-1.5">
+                <Label htmlFor="displayName">Display Name</Label>
+                <Input id="displayName" type="text" placeholder="e.g., johnd" value={displayName} onChange={(e) => setDisplayName(e.target.value)} required />
+              </div>
+            </>
+          )}
           <div className="space-y-1.5">
             <Label htmlFor="email">Email</Label>
             <Input id="email" type="email" placeholder="m@example.com" value={email} onChange={(e) => setEmail(e.target.value)} required />
@@ -73,6 +104,12 @@ export function LoginForm() {
               </div>
             <Input id="password" type="password" placeholder="••••••••" value={password} onChange={(e) => setPassword(e.target.value)} required />
           </div>
+           {!isLogin && (
+             <div className="space-y-1.5">
+               <Label htmlFor="confirmPassword">Confirm Password</Label>
+               <Input id="confirmPassword" type="password" placeholder="••••••••" value={confirmPassword} onChange={(e) => setConfirmPassword(e.target.value)} required/>
+             </div>
+           )}
           <Button type="submit" className="w-full" disabled={isLoading}>
               {isLoading && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
               {isLogin ? 'Login' : 'Sign Up'}
