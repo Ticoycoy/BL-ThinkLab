@@ -102,11 +102,12 @@ export function LoginForm() {
     <div className="flex flex-col gap-6">
       <div className="flex items-center">
         <Image
-          src="/brightlocal-logo.png"
+          src="https://placehold.co/200x45.png"
           alt="WorkFlowZen Logo"
           width={200}
           height={45}
           className="object-contain"
+          data-ai-hint="logo"
         />
       </div>
       <div className="text-left">

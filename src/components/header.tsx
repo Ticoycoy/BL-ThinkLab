@@ -85,11 +85,12 @@ export function Header() {
         <div className="flex items-center gap-6">
             <Link href="/" className="flex items-center">
                 <Image
-                    src="/brightlocal-logo.png"
+                    src="https://placehold.co/140x30.png"
                     alt="WorkFlowZen Logo"
                     width={140}
                     height={30}
                     className="object-contain"
+                    data-ai-hint="logo"
                 />
             </Link>
         
