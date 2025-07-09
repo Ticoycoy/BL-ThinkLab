@@ -51,13 +51,30 @@ export function LoginForm() {
         // The AuthProvider will handle the redirect on successful sign-up.
       }
     } catch (error: any) {
-      let errorMessage = "An unexpected error occurred.";
-      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-        errorMessage = "Invalid email or password. Please try again.";
-      } else if (error.code === 'auth/email-already-in-use') {
-        errorMessage = "This email is already registered. Please log in.";
-      } else if (error.code === 'auth/weak-password') {
-        errorMessage = "Password is too weak. It should be at least 6 characters.";
+      console.error("Authentication Error:", error);
+      let errorMessage = "An unexpected error occurred. Please try again.";
+
+      switch (error.code) {
+        case 'auth/user-not-found':
+        case 'auth/wrong-password':
+        case 'auth/invalid-credential':
+          errorMessage = "Invalid email or password. Please try again.";
+          break;
+        case 'auth/email-already-in-use':
+          errorMessage = "This email is already registered. Please log in.";
+          break;
+        case 'auth/weak-password':
+          errorMessage = "Password is too weak. It should be at least 6 characters long.";
+          break;
+        case 'auth/invalid-email':
+          errorMessage = "The email address is not valid. Please enter a valid email.";
+          break;
+        case 'auth/operation-not-allowed':
+           errorMessage = "Email/password sign-up is not enabled. Please enable it in your Firebase project console.";
+           break;
+        default:
+          errorMessage = `An error occurred: ${error.message}`;
+          break;
       }
       
       toast({
