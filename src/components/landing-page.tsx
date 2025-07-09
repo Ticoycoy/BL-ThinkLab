@@ -10,27 +10,27 @@ export function LandingPage() {
       <section id="hero" className="container grid lg:grid-cols-2 gap-12 items-center py-20 md:py-32">
         <div className="space-y-6 text-center lg:text-left">
           <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold tracking-tighter">
-            Welcome to the <span className="text-primary">Brightlocal Research Team</span> Hub
+            Research Team
           </h1>
           <p className="max-w-[600px] mx-auto lg:mx-0 text-muted-foreground md:text-xl">
-            This is the central hub for our research and task management. Streamline your workflow, collaborate effectively, and drive innovation with powerful tools at your fingertips.
+            Lorem ipsum dolor sit amet, constetur adipiscing elit. Sed do eusmoed lorenc incididunt ut labore et dolore.
           </p>
           <div className="flex flex-col sm:flex-row gap-4 justify-center lg:justify-start">
             <Button size="lg" asChild>
               <Link href="/login">
-                Get Started <ArrowRight className="ml-2 h-5 w-5" />
+                Get Started
               </Link>
             </Button>
           </div>
         </div>
         <div className="flex justify-center">
             <Image
-                src="https://placehold.co/600x400.png"
-                alt="Research Team Collaboration"
+                src="https://placehold.co/600x450.png"
+                alt="Research Team Illustration"
                 width={600}
-                height={400}
-                className="rounded-xl shadow-2xl"
-                data-ai-hint="research collaboration"
+                height={450}
+                className="rounded-xl"
+                data-ai-hint="research scientist illustration"
             />
         </div>
       </section>

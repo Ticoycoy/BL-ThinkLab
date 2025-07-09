@@ -9,22 +9,21 @@ export function LandingHeader() {
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <Link href="/" className="flex items-center gap-2">
-          <Image
-            src="https://placehold.co/140x30.png"
-            alt="WorkFlowZen Logo"
-            width={140}
-            height={30}
-            className="object-contain"
-            data-ai-hint="logo"
-          />
+        <Link href="/" className="flex items-center gap-2 font-bold text-lg">
+          Research Team
         </Link>
-        <div className="flex items-center gap-4">
+        <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
+            <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">Home</Link>
+            <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">About</Link>
+            <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">Services</Link>
+            <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">Contact</Link>
+        </nav>
+        <div className="flex items-center gap-2">
           <Button variant="ghost" asChild>
-            <Link href="/login">Sign In</Link>
+            <Link href="/login">Sign in</Link>
           </Button>
           <Button asChild>
-            <Link href="/login">Get Started</Link>
+            <Link href="/login">Sign up</Link>
           </Button>
         </div>
       </div>
