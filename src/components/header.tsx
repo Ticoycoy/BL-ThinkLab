@@ -85,11 +85,11 @@ export function Header() {
         <NavigationMenu>
           <NavigationMenuList>
             <NavigationMenuItem>
-                <Link href="/" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink asChild>
+                    <Link href="/" className={navigationMenuTriggerStyle()}>
                     🏠 Home
-                    </NavigationMenuLink>
-                </Link>
+                    </Link>
+                </NavigationMenuLink>
             </NavigationMenuItem>
 
             <NavigationMenuItem>
@@ -144,18 +144,18 @@ export function Header() {
             </NavigationMenuItem>
 
             <NavigationMenuItem>
-                <Link href="#" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink asChild>
+                    <Link href="#" className={navigationMenuTriggerStyle()}>
                     ⚙️ Research Environment
-                    </NavigationMenuLink>
-                </Link>
+                    </Link>
+                </NavigationMenuLink>
             </NavigationMenuItem>
             <NavigationMenuItem>
-                <Link href="#" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                <NavigationMenuLink asChild>
+                    <Link href="#" className={navigationMenuTriggerStyle()}>
                     📅 Render Services
-                    </NavigationMenuLink>
-                </Link>
+                    </Link>
+                </NavigationMenuLink>
             </NavigationMenuItem>
           </NavigationMenuList>
         </NavigationMenu>
