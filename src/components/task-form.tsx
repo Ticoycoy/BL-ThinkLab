@@ -8,12 +8,11 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter, DialogDescription } from "@/components/ui/dialog";
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
-import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, ChevronsUpDown } from "lucide-react";
+import { CalendarIcon } from "lucide-react";
 import { format } from "date-fns";
 import type { Task, Team } from "@/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -22,8 +21,9 @@ const TEAMS: Team[] = ['Research Team', 'Connection Team', 'Special task team'];
 
 const taskSchema = z.object({
   name: z.string().min(3, "Task name must be at least 3 characters long."),
+  description: z.string().min(3, "Description must be at least 3 characters long."),
+  assignee: z.string().min(2, "Assignee name must be at least 2 characters."),
   deadline: z.date({ required_error: "A deadline is required." }),
-  dependencies: z.array(z.string()).optional(),
   team: z.enum(TEAMS, { required_error: "A team is required." }),
   currentCount: z.coerce.number().min(0, "Current count cannot be negative.").default(0),
   expectedCount: z.coerce.number().min(1, "Expected count must be at least 1."),
@@ -36,15 +36,15 @@ interface TaskFormProps {
   setIsOpen: (open: boolean) => void;
   onSubmit: (data: Omit<Task, 'id' | 'status'> | Task) => void;
   taskToEdit?: Task;
-  allTasks: Task[];
 }
 
-export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: TaskFormProps) {
+export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit }: TaskFormProps) {
   const form = useForm<TaskFormValues>({
     resolver: zodResolver(taskSchema),
     defaultValues: {
       name: "",
-      dependencies: [],
+      description: "",
+      assignee: "",
       currentCount: 0,
       expectedCount: 1,
     },
@@ -54,8 +54,9 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
     if (taskToEdit) {
       form.reset({
         name: taskToEdit.name,
+        description: taskToEdit.description,
+        assignee: taskToEdit.assignee,
         deadline: taskToEdit.deadline,
-        dependencies: taskToEdit.dependencies,
         team: taskToEdit.team,
         currentCount: taskToEdit.currentCount,
         expectedCount: taskToEdit.expectedCount,
@@ -63,8 +64,9 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
     } else {
       form.reset({
         name: "",
+        description: "",
+        assignee: "",
         deadline: undefined,
-        dependencies: [],
         team: undefined,
         currentCount: 0,
         expectedCount: 1,
@@ -81,8 +83,6 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
     setIsOpen(false);
   };
   
-  const availableDependencies = allTasks.filter(task => task.id !== taskToEdit?.id);
-
   return (
     <Dialog open={isOpen} onOpenChange={setIsOpen}>
       <DialogContent className="sm:max-w-[425px]">
@@ -102,6 +102,34 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
                   <FormLabel>Task Name</FormLabel>
                   <FormControl>
                     <Input placeholder="e.g., Deploy to production" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="description"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Description</FormLabel>
+                  <FormControl>
+                    <Textarea placeholder="Describe the task in detail..." {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            
+            <FormField
+              control={form.control}
+              name="assignee"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Assignee</FormLabel>
+                  <FormControl>
+                    <Input placeholder="e.g., John Doe" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -195,49 +223,7 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
                 </FormItem>
               )}
             />
-            <FormField
-              control={form.control}
-              name="dependencies"
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Dependencies</FormLabel>
-                   <Popover>
-                      <PopoverTrigger asChild>
-                        <Button variant="outline" role="combobox" className="w-full justify-between font-normal">
-                          {field.value && field.value.length > 0 ? `${field.value.length} selected` : "Select dependencies"}
-                          <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                        </Button>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[375px] p-0">
-                        <Command>
-                          <CommandInput placeholder="Search tasks..." />
-                          <CommandList>
-                            <CommandEmpty>No tasks found.</CommandEmpty>
-                            <CommandGroup>
-                              {availableDependencies.map((task) => (
-                                <CommandItem
-                                  key={task.id}
-                                  onSelect={() => {
-                                    const selected = field.value || [];
-                                    const newSelected = selected.includes(task.id)
-                                      ? selected.filter((id) => id !== task.id)
-                                      : [...selected, task.id];
-                                    field.onChange(newSelected);
-                                  }}
-                                >
-                                  <Checkbox checked={field.value?.includes(task.id)} className="mr-2" />
-                                  <span>{task.name}</span>
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            
             <DialogFooter>
               <Button type="button" variant="ghost" onClick={() => setIsOpen(false)}>Cancel</Button>
               <Button type="submit">{taskToEdit ? "Save Changes" : "Create Task"}</Button>

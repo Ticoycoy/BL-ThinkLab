@@ -1,7 +1,7 @@
-// use server'
+'use server'
 
 /**
- * @fileOverview An AI agent that suggests task prioritization based on deadlines and dependencies.
+ * @fileOverview An AI agent that suggests task prioritization based on deadlines.
  *
  * - suggestTaskPrioritization - A function that suggests task prioritization.
  * - SuggestTaskPrioritizationInput - The input type for the suggestTaskPrioritization function.
@@ -16,9 +16,8 @@ const SuggestTaskPrioritizationInputSchema = z.object({
     z.object({
       name: z.string().describe('The name of the task.'),
       deadline: z.string().describe('The deadline of the task (ISO format).'),
-      dependencies: z.array(z.string()).describe('The names of the tasks that this task depends on.'),
     })
-  ).describe('A list of tasks with their deadlines and dependencies.'),
+  ).describe('A list of tasks with their deadlines.'),
 });
 export type SuggestTaskPrioritizationInput = z.infer<typeof SuggestTaskPrioritizationInputSchema>;
 
@@ -41,16 +40,15 @@ const prompt = ai.definePrompt({
   name: 'suggestTaskPrioritizationPrompt',
   input: {schema: SuggestTaskPrioritizationInputSchema},
   output: {schema: SuggestTaskPrioritizationOutputSchema},
-  prompt: `You are an AI task prioritization assistant. Given a list of tasks with their deadlines and dependencies, you will suggest an optimal task prioritization.
+  prompt: `You are an AI task prioritization assistant. Given a list of tasks with their deadlines, you will suggest an optimal task prioritization.
 
 Tasks:
 {{#each tasks}}
 - Name: {{name}}
   Deadline: {{deadline}}
-  Dependencies: {{#if dependencies}}{{#each dependencies}}{{this}}{{#unless @last}}, {{/unless}}{{/each}}{{else}}None{{/if}}
 {{/each}}
 
-Prioritize the tasks based on their deadlines and dependencies. Tasks with earlier deadlines and more dependencies should be prioritized higher. Provide a reason for each task's priority.
+Prioritize the tasks based on their deadlines. Tasks with earlier deadlines should be prioritized higher. Provide a reason for each task's priority.
 
 Return the prioritized tasks in the following JSON format:
 {{json prioritizedTasks}}`,

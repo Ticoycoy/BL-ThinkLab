@@ -30,12 +30,12 @@ export function TaskDashboard() {
 
   useEffect(() => {
     const initialTasks: Task[] = [
-      { id: '1', name: 'Design homepage mockups', deadline: new Date(new Date().setDate(new Date().getDate() + 5)), status: 'Working', dependencies: [], team: 'Research Team', currentCount: 5, expectedCount: 10 },
-      { id: '2', name: 'Develop API for user authentication', deadline: new Date(new Date().setDate(new Date().getDate() + 7)), status: 'Pending', dependencies: ['1'], team: 'Connection Team', currentCount: 0, expectedCount: 1 },
-      { id: '3', name: 'Setup database schema', deadline: new Date(new Date().setDate(new Date().getDate() + 3)), status: 'Working', dependencies: [], team: 'Research Team', currentCount: 1, expectedCount: 1 },
-      { id: '4', name: 'Implement frontend login page', deadline: new Date(new Date().setDate(new Date().getDate() + 10)), status: 'Pending', dependencies: ['2'], team: 'Connection Team', currentCount: 0, expectedCount: 5 },
-      { id: '5', name: 'Write documentation for API', deadline: new Date(new Date().setDate(new Date().getDate() + 14)), status: 'Done', dependencies: ['2'], team: 'Special task team', currentCount: 20, expectedCount: 20 },
-      { id: '6', name: 'Deploy application to staging', deadline: new Date(new Date().setDate(new Date().getDate() + 20)), status: 'Pending', dependencies: ['4', '5'], team: 'Special task team', currentCount: 0, expectedCount: 1 },
+      { id: '1', name: 'Design homepage mockups', description: 'Create high-fidelity mockups for the new homepage.', assignee: 'Alice', deadline: new Date(new Date().setDate(new Date().getDate() + 5)), status: 'Working', team: 'Research Team', currentCount: 5, expectedCount: 10 },
+      { id: '2', name: 'Develop API for user authentication', description: 'Set up endpoints for user login and registration.', assignee: 'Bob', deadline: new Date(new Date().setDate(new Date().getDate() + 7)), status: 'Pending', team: 'Connection Team', currentCount: 0, expectedCount: 1 },
+      { id: '3', name: 'Setup database schema', description: 'Define and migrate the initial database schema.', assignee: 'Alice', deadline: new Date(new Date().setDate(new Date().getDate() + 3)), status: 'Working', team: 'Research Team', currentCount: 1, expectedCount: 1 },
+      { id: '4', name: 'Implement frontend login page', description: 'Build the login page UI and connect to the API.', assignee: 'Charlie', deadline: new Date(new Date().setDate(new Date().getDate() + 10)), status: 'Pending', team: 'Connection Team', currentCount: 0, expectedCount: 5 },
+      { id: '5', name: 'Write documentation for API', description: 'Document all public API endpoints.', assignee: 'David', deadline: new Date(new Date().setDate(new Date().getDate() + 14)), status: 'Done', team: 'Special task team', currentCount: 20, expectedCount: 20 },
+      { id: '6', name: 'Deploy application to staging', description: 'Deploy the latest version to the staging environment.', assignee: 'Erin', deadline: new Date(new Date().setDate(new Date().getDate() + 20)), status: 'Pending', team: 'Special task team', currentCount: 0, expectedCount: 1 },
     ];
     setTasks(initialTasks);
   }, []);
@@ -138,7 +138,6 @@ export function TaskDashboard() {
         setIsOpen={setFormOpen}
         onSubmit={taskToEdit ? handleUpdateTask : handleAddTask}
         taskToEdit={taskToEdit}
-        allTasks={tasks}
       />
       
       <TaskPrioritizer

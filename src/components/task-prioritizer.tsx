@@ -30,7 +30,6 @@ export function TaskPrioritizer({ isOpen, setIsOpen, tasks }: TaskPrioritizerPro
       .map(task => ({
         name: task.name,
         deadline: task.deadline.toISOString(),
-        dependencies: task.dependencies.map(depId => tasks.find(t => t.id === depId)?.name || '').filter(Boolean),
     }));
 
     if (tasksForAI.length === 0) {
@@ -76,7 +75,7 @@ export function TaskPrioritizer({ isOpen, setIsOpen, tasks }: TaskPrioritizerPro
             AI Task Prioritization
           </DialogTitle>
           <DialogDescription>
-            Here's a suggested order for your tasks based on their deadlines and dependencies.
+            Here's a suggested order for your tasks based on their deadlines.
           </DialogDescription>
         </DialogHeader>
         <div className="py-4">

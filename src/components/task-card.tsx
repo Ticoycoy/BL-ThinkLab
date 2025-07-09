@@ -6,7 +6,7 @@ import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuPortal, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Trash2, Edit, CheckSquare } from "lucide-react";
+import { MoreHorizontal, Trash2, Edit, CheckSquare, User } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
 import { Progress } from "@/components/ui/progress";
@@ -90,7 +90,8 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </CardHeader>
-      <CardContent className="pb-4 space-y-2">
+      <CardContent className="pb-4 space-y-3">
+        <p className="text-sm text-muted-foreground break-words">{task.description}</p>
         <div className="flex items-center text-sm">
             <div className={cn(
                 "flex items-center text-muted-foreground",
@@ -111,12 +112,16 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
             <Progress value={progress} className="h-2" />
         </div>
       </CardContent>
-      <CardFooter>
+      <CardFooter className="flex-col items-start gap-3 p-4 pt-0">
         <div className="flex justify-between items-center w-full">
             <Badge variant={statusConfig[task.status].variant}>
                 {statusConfig[task.status].label}
             </Badge>
             <span className="text-sm font-medium text-muted-foreground">{task.team}</span>
+        </div>
+        <div className="flex items-center gap-2 text-sm text-muted-foreground">
+            <User className="h-4 w-4" />
+            <span>{task.assignee}</span>
         </div>
       </CardFooter>
     </Card>
