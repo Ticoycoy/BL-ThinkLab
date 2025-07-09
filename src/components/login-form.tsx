@@ -2,7 +2,8 @@
 
 import { useState } from "react";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
-import { auth } from "@/lib/firebase";
+import { auth, db } from "@/lib/firebase";
+import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -48,6 +49,14 @@ export function LoginForm() {
         await updateProfile(userCredential.user, {
           displayName: displayName
         });
+
+        // Create a user document in Firestore
+        await setDoc(doc(db, "users", userCredential.user.uid), {
+            fullName: fullName,
+            displayName: displayName,
+            email: email,
+        });
+        
         // The AuthProvider will handle the redirect on successful sign-up.
       }
     } catch (error: any) {
