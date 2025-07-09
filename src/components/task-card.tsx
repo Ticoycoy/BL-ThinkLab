@@ -1,5 +1,6 @@
 "use client";
 
+import * as React from "react";
 import type { Task, TaskStatus } from "@/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
@@ -24,12 +25,17 @@ const statusConfig: Record<TaskStatus, { color: "green" | "blue" | "yellow", lab
 
 
 export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
+  const [isClient, setIsClient] = React.useState(false);
+
+  React.useEffect(() => {
+    setIsClient(true);
+  }, []);
+  
   const handleStatusChange = (status: TaskStatus) => {
     onUpdate({ ...task, status });
   };
   
-  const isOverdue = !task.deadline ? false : new Date() > task.deadline && task.status !== 'done';
-  const config = statusConfig[task.status];
+  const isOverdue = isClient && task.deadline ? new Date() > task.deadline && task.status !== 'done' : false;
   
   return (
     <Card className={cn(
@@ -67,9 +73,11 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
                 "flex items-center text-muted-foreground",
                  isOverdue && "text-destructive font-medium"
             )}>
-              <p>{format(task.deadline, 'MMM d, yyyy')}</p>
-              <span className="mx-1.5">•</span>
-              <p>({formatDistanceToNow(task.deadline, { addSuffix: true })})</p>
+              {task.deadline && <p>{format(task.deadline, 'MMM d, yyyy')}</p>}
+              {isClient && task.deadline && <span className="mx-1.5">•</span>}
+              {isClient && task.deadline ? (
+                <p>({formatDistanceToNow(task.deadline, { addSuffix: true })})</p>
+              ) : null}
             </div>
         </div>
       </CardContent>

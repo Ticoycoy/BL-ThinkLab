@@ -1,21 +1,12 @@
 "use client";
 
-import React, { useState, useMemo } from "react";
+import React, { useState, useMemo, useEffect } from "react";
 import { PlusCircle, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { TaskCard } from "@/components/task-card";
 import { TaskForm } from "@/components/task-form";
 import { TaskPrioritizer } from "@/components/task-prioritizer";
 import type { Task, TaskStatus } from "@/types";
-
-const initialTasks: Task[] = [
-  { id: '1', name: 'Design homepage mockups', deadline: new Date(new Date().setDate(new Date().getDate() + 5)), status: 'in-progress', dependencies: [] },
-  { id: '2', name: 'Develop API for user authentication', deadline: new Date(new Date().setDate(new Date().getDate() + 7)), status: 'todo', dependencies: ['1'] },
-  { id: '3', name: 'Setup database schema', deadline: new Date(new Date().setDate(new Date().getDate() + 3)), status: 'in-progress', dependencies: [] },
-  { id: '4', name: 'Implement frontend login page', deadline: new Date(new Date().setDate(new Date().getDate() + 10)), status: 'todo', dependencies: ['2'] },
-  { id: '5', name: 'Write documentation for API', deadline: new Date(new Date().setDate(new Date().getDate() + 14)), status: 'done', dependencies: ['2'] },
-  { id: '6', name: 'Deploy application to staging', deadline: new Date(new Date().setDate(new Date().getDate() + 20)), status: 'todo', dependencies: ['4', '5'] },
-];
 
 const statusDisplay: Record<TaskStatus, string> = {
   todo: "To Do",
@@ -24,11 +15,23 @@ const statusDisplay: Record<TaskStatus, string> = {
 };
 
 export function TaskDashboard() {
-  const [tasks, setTasks] = useState<Task[]>(initialTasks);
+  const [tasks, setTasks] = useState<Task[]>([]);
   const [isFormOpen, setFormOpen] = useState(false);
   const [taskToEdit, setTaskToEdit] = useState<Task | undefined>(undefined);
   
   const [isPrioritizerOpen, setPrioritizerOpen] = useState(false);
+
+  useEffect(() => {
+    const initialTasks: Task[] = [
+      { id: '1', name: 'Design homepage mockups', deadline: new Date(new Date().setDate(new Date().getDate() + 5)), status: 'in-progress', dependencies: [] },
+      { id: '2', name: 'Develop API for user authentication', deadline: new Date(new Date().setDate(new Date().getDate() + 7)), status: 'todo', dependencies: ['1'] },
+      { id: '3', name: 'Setup database schema', deadline: new Date(new Date().setDate(new Date().getDate() + 3)), status: 'in-progress', dependencies: [] },
+      { id: '4', name: 'Implement frontend login page', deadline: new Date(new Date().setDate(new Date().getDate() + 10)), status: 'todo', dependencies: ['2'] },
+      { id: '5', name: 'Write documentation for API', deadline: new Date(new Date().setDate(new Date().getDate() + 14)), status: 'done', dependencies: ['2'] },
+      { id: '6', name: 'Deploy application to staging', deadline: new Date(new Date().setDate(new Date().getDate() + 20)), status: 'todo', dependencies: ['4', '5'] },
+    ];
+    setTasks(initialTasks);
+  }, []);
 
   const handleAddTask = (task: Omit<Task, 'id' | 'status'>) => {
     const newTask: Task = {
