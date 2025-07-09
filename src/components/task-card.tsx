@@ -34,7 +34,8 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
   React.useEffect(() => {
     // This ensures time-sensitive calculations only run on the client, avoiding hydration mismatches.
     if (task.deadline) {
-      setIsOverdue(new Date() > task.deadline && task.status !== 'Done');
+      const isPast = new Date() > task.deadline;
+      setIsOverdue(isPast && task.status !== 'Done');
       setRelativeDeadline(formatDistanceToNow(task.deadline, { addSuffix: true }));
     }
   }, [task.deadline, task.status]);

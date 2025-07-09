@@ -19,7 +19,7 @@ export default function LoginPage() {
                 <p className="text-xl text-primary-foreground/80">Welcome to WorkFlowZen!</p>
             </div>
             <Image
-                src="https://placehold.co/400x300.png"
+                src="resources/brightlocal-logo.png"
                 alt="Company Logo"
                 width={400}
                 height={300}
