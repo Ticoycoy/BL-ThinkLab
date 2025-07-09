@@ -70,6 +70,7 @@ export function LoginForm() {
           errorMessage = "The email address is not valid. Please enter a valid email.";
           break;
         case 'auth/operation-not-allowed':
+        case 'auth/configuration-not-found':
            errorMessage = "Email/password sign-up is not enabled. Please enable it in your Firebase project console.";
            break;
         default:
