@@ -19,12 +19,12 @@ export default function LoginPage() {
                 <p className="text-xl text-primary-foreground/80">Welcome to WorkFlowZen!</p>
             </div>
             <Image
-                src="https://placehold.co/400x300.png"
-                alt="Company Logo"
+                src="/banner.jpg"
+                alt="WorkFlowZen Banner"
                 width={400}
                 height={300}
-                className="rounded-lg object-contain"
-                data-ai-hint="company logo"
+                className="rounded-lg object-cover"
+                data-ai-hint="banner"
             />
         </div>
       </div>
