@@ -13,14 +13,20 @@ import { Calendar } from "@/components/ui/calendar";
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { CalendarIcon, Check, ChevronsUpDown } from "lucide-react";
+import { CalendarIcon, ChevronsUpDown } from "lucide-react";
 import { format } from "date-fns";
-import type { Task } from "@/types";
+import type { Task, Team } from "@/types";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+
+const TEAMS: Team[] = ['Research Team', 'Connection Team', 'Special task team'];
 
 const taskSchema = z.object({
   name: z.string().min(3, "Task name must be at least 3 characters long."),
   deadline: z.date({ required_error: "A deadline is required." }),
   dependencies: z.array(z.string()).optional(),
+  team: z.enum(TEAMS, { required_error: "A team is required." }),
+  currentCount: z.coerce.number().min(0, "Current count cannot be negative.").default(0),
+  expectedCount: z.coerce.number().min(1, "Expected count must be at least 1."),
 });
 
 type TaskFormValues = z.infer<typeof taskSchema>;
@@ -39,6 +45,8 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
     defaultValues: {
       name: "",
       dependencies: [],
+      currentCount: 0,
+      expectedCount: 1,
     },
   });
 
@@ -48,12 +56,18 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
         name: taskToEdit.name,
         deadline: taskToEdit.deadline,
         dependencies: taskToEdit.dependencies,
+        team: taskToEdit.team,
+        currentCount: taskToEdit.currentCount,
+        expectedCount: taskToEdit.expectedCount,
       });
     } else {
       form.reset({
         name: "",
         deadline: undefined,
         dependencies: [],
+        team: undefined,
+        currentCount: 0,
+        expectedCount: 1,
       });
     }
   }, [taskToEdit, isOpen, form]);
@@ -93,6 +107,59 @@ export function TaskForm({ isOpen, setIsOpen, onSubmit, taskToEdit, allTasks }: 
                 </FormItem>
               )}
             />
+
+            <FormField
+              control={form.control}
+              name="team"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Team</FormLabel>
+                  <Select onValueChange={field.onChange} value={field.value}>
+                    <FormControl>
+                      <SelectTrigger>
+                        <SelectValue placeholder="Select a team" />
+                      </SelectTrigger>
+                    </FormControl>
+                    <SelectContent>
+                      {TEAMS.map(team => (
+                        <SelectItem key={team} value={team}>{team}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <div className="grid grid-cols-2 gap-4">
+              <FormField
+                control={form.control}
+                name="currentCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Current Count</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <FormField
+                control={form.control}
+                name="expectedCount"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Expected Count</FormLabel>
+                    <FormControl>
+                      <Input type="number" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            </div>
+
             <FormField
               control={form.control}
               name="deadline"

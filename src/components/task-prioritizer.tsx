@@ -26,7 +26,7 @@ export function TaskPrioritizer({ isOpen, setIsOpen, tasks }: TaskPrioritizerPro
     setSuggestions(null);
 
     const tasksForAI = tasks
-      .filter(t => t.status !== 'done')
+      .filter(t => t.status !== 'Done')
       .map(task => ({
         name: task.name,
         deadline: task.deadline.toISOString(),

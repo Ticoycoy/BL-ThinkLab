@@ -5,10 +5,11 @@ import type { Task, TaskStatus } from "@/types";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreHorizontal, Trash2, Edit, CheckCircle2, XCircle } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSub, DropdownMenuSubContent, DropdownMenuPortal, DropdownMenuSubTrigger } from "@/components/ui/dropdown-menu";
+import { MoreHorizontal, Trash2, Edit, CheckSquare } from "lucide-react";
 import { format, formatDistanceToNow } from "date-fns";
 import { cn } from "@/lib/utils";
+import { Progress } from "@/components/ui/progress";
 
 interface TaskCardProps {
   task: Task;
@@ -17,12 +18,14 @@ interface TaskCardProps {
   onEdit: (task: Task) => void;
 }
 
-const statusConfig: Record<TaskStatus, { color: "green" | "blue" | "yellow", label: string }> = {
-    done: { color: "green", label: "Done" },
-    'in-progress': { color: "blue", label: "In Progress" },
-    todo: { color: "yellow", label: "To Do" },
+const statusConfig: Record<TaskStatus, { variant: "default" | "secondary" | "outline", label: string }> = {
+    "Pending": { variant: "outline", label: "Pending" },
+    "Working": { variant: "default", label: "Working" },
+    "QA": { variant: "secondary", label: "QA" },
+    "Done": { variant: "secondary", label: "Done" },
 };
 
+const ALL_STATUSES: TaskStatus[] = ["Pending", "Working", "QA", "Done"];
 
 export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
   const [isClient, setIsClient] = React.useState(false);
@@ -35,17 +38,18 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
     onUpdate({ ...task, status });
   };
   
-  const isOverdue = isClient && task.deadline ? new Date() > task.deadline && task.status !== 'done' : false;
+  const isOverdue = isClient && task.deadline ? new Date() > task.deadline && task.status !== 'Done' : false;
+  const progress = task.expectedCount > 0 ? (task.currentCount / task.expectedCount) * 100 : 0;
   
   return (
     <Card className={cn(
         "transition-all", 
-        task.status === 'done' ? 'bg-muted/60 opacity-80' : 'bg-card'
+        task.status === 'Done' ? 'bg-muted/60 opacity-80' : 'bg-card'
     )}>
       <CardHeader className="flex flex-row items-start justify-between pb-2">
         <CardTitle className={cn(
             "text-base font-medium leading-snug transition-all",
-            task.status === 'done' && 'line-through text-muted-foreground'
+            task.status === 'Done' && 'line-through text-muted-foreground'
           )}>
           {task.name}
         </CardTitle>
@@ -60,6 +64,25 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
               <Edit className="mr-2 h-4 w-4" />
               Edit
             </DropdownMenuItem>
+             <DropdownMenuSub>
+              <DropdownMenuSubTrigger>
+                <CheckSquare className="mr-2 h-4 w-4" />
+                <span>Change Status</span>
+              </DropdownMenuSubTrigger>
+              <DropdownMenuPortal>
+                <DropdownMenuSubContent>
+                  {ALL_STATUSES.map(status => (
+                    <DropdownMenuItem 
+                      key={status} 
+                      onClick={() => handleStatusChange(status)}
+                      disabled={task.status === status}
+                    >
+                      {statusConfig[status].label}
+                    </DropdownMenuItem>
+                  ))}
+                </DropdownMenuSubContent>
+              </DropdownMenuPortal>
+            </DropdownMenuSub>
             <DropdownMenuItem onClick={() => onDelete(task.id)} className="text-destructive focus:text-destructive">
               <Trash2 className="mr-2 h-4 w-4" />
               Delete
@@ -67,7 +90,7 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
           </DropdownMenuContent>
         </DropdownMenu>
       </CardHeader>
-      <CardContent className="pb-4">
+      <CardContent className="pb-4 space-y-2">
         <div className="flex items-center text-sm">
             <div className={cn(
                 "flex items-center text-muted-foreground",
@@ -80,24 +103,20 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
               ) : null}
             </div>
         </div>
+        <div>
+            <div className="flex justify-between text-sm text-muted-foreground mb-1">
+                <span>Progress</span>
+                <span>{task.currentCount} / {task.expectedCount}</span>
+            </div>
+            <Progress value={progress} className="h-2" />
+        </div>
       </CardContent>
       <CardFooter>
         <div className="flex justify-between items-center w-full">
-            <Badge variant={task.status === 'done' ? 'secondary' : task.status === 'in-progress' ? 'default' : 'outline'}>
+            <Badge variant={statusConfig[task.status].variant}>
                 {statusConfig[task.status].label}
             </Badge>
-
-            <div>
-                {task.status !== 'done' ? (
-                     <Button size="sm" variant="ghost" onClick={() => handleStatusChange('done')} className="text-green-600 hover:text-green-700 hover:bg-green-50">
-                        <CheckCircle2 className="h-4 w-4 mr-1"/> Mark as Done
-                    </Button>
-                ) : (
-                    <Button size="sm" variant="ghost" onClick={() => handleStatusChange('todo')} className="text-muted-foreground hover:text-foreground">
-                        <XCircle className="h-4 w-4 mr-1"/> Mark as To-do
-                    </Button>
-                )}
-            </div>
+            <span className="text-sm font-medium text-muted-foreground">{task.team}</span>
         </div>
       </CardFooter>
     </Card>
