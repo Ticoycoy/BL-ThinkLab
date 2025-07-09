@@ -28,17 +28,21 @@ const statusConfig: Record<TaskStatus, { variant: "default" | "secondary" | "out
 const ALL_STATUSES: TaskStatus[] = ["Pending", "Working", "QA", "Done"];
 
 export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
-  const [isClient, setIsClient] = React.useState(false);
+  const [isOverdue, setIsOverdue] = React.useState(false);
+  const [relativeDeadline, setRelativeDeadline] = React.useState("");
 
   React.useEffect(() => {
-    setIsClient(true);
-  }, []);
+    // This ensures time-sensitive calculations only run on the client, avoiding hydration mismatches.
+    if (task.deadline) {
+      setIsOverdue(new Date() > task.deadline && task.status !== 'Done');
+      setRelativeDeadline(formatDistanceToNow(task.deadline, { addSuffix: true }));
+    }
+  }, [task.deadline, task.status]);
   
   const handleStatusChange = (status: TaskStatus) => {
     onUpdate({ ...task, status });
   };
   
-  const isOverdue = isClient && task.deadline ? new Date() > task.deadline && task.status !== 'Done' : false;
   const progress = task.expectedCount > 0 ? (task.currentCount / task.expectedCount) * 100 : 0;
   
   return (
@@ -98,10 +102,8 @@ export function TaskCard({ task, onUpdate, onDelete, onEdit }: TaskCardProps) {
                  isOverdue && "text-destructive font-medium"
             )}>
               {task.deadline && <p>{format(task.deadline, 'MMM d, yyyy')}</p>}
-              {isClient && task.deadline && <span className="mx-1.5">•</span>}
-              {isClient && task.deadline ? (
-                <p>({formatDistanceToNow(task.deadline, { addSuffix: true })})</p>
-              ) : null}
+              {relativeDeadline && <span className="mx-1.5">•</span>}
+              {relativeDeadline ? <p>({relativeDeadline})</p> : null}
             </div>
         </div>
         <div>
