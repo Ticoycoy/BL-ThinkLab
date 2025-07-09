@@ -37,11 +37,13 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     if (loading) return;
 
     const isAuthPage = pathname === '/login';
+    const isLandingPage = pathname === '/';
+    const isAppPage = !isLandingPage && !isAuthPage;
 
-    if (!user && !isAuthPage) {
+    if (!user && isAppPage) {
       router.push('/login');
-    } else if (user && isAuthPage) {
-      router.push('/');
+    } else if (user && (isAuthPage || isLandingPage)) {
+      router.push('/dashboard');
     }
   }, [user, loading, pathname, router]);
   
@@ -50,9 +52,9 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     router.push('/login');
   };
 
-  const isProtectedRoute = pathname !== '/login';
+  const isAppPage = !['/', '/login'].includes(pathname);
 
-  if (loading || (!user && isProtectedRoute)) {
+  if (loading || (!user && isAppPage)) {
     return (
         <div className="flex items-center justify-center min-h-screen bg-background">
             <Loader2 className="h-16 w-16 animate-spin text-primary" />

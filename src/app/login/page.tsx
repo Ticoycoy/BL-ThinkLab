@@ -11,12 +11,10 @@ export default function LoginPage() {
         <div className="hidden lg:flex flex-col items-center justify-center p-12 bg-gradient-to-br from-primary via-purple-500 to-pink-500 text-primary-foreground text-center space-y-8">
             <div className="space-y-4">
                 <h1 className="text-4xl font-bold tracking-tight">
-                It's not about what you make.
+                Fueling Innovation Through Evidence.
                 </h1>
-                <h2 className="text-3xl font-semibold">
-                It's about what you make possible.
-                </h2>
-                <p className="text-xl text-primary-foreground/80">Welcome to WorkFlowZen!</p>
+   
+                <p className="text-xl text-primary-foreground/80">Welcome to BL ThinkLab!</p>
             </div>
             <Image
                 src="/banner.jpg"

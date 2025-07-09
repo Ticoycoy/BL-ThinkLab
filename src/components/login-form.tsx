@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
@@ -100,16 +101,16 @@ export function LoginForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center">
+      <Link href="/" className="flex items-center">
         <Image
-          src="https://placehold.co/200x45.png"
+          src="https://placehold.co/400x200.png"
           alt="WorkFlowZen Logo"
-          width={200}
-          height={45}
+          width={400}
+          height={200}
           className="object-contain"
           data-ai-hint="logo"
         />
-      </div>
+      </Link>
       <div className="text-left">
           <h1 className="text-2xl font-bold tracking-tight">{isLogin ? 'Welcome Back!' : 'Create an Account'}</h1>
           <p className="text-muted-foreground">{isLogin ? 'Enter your credentials to access your dashboard.' : 'Fill in the details to get started.'}</p>
