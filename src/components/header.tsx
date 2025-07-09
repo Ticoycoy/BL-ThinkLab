@@ -12,7 +12,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { ClipboardCheck } from "lucide-react";
+import { FlaskConical } from "lucide-react";
 
 // Data for navigation
 const aboutUsComponents: { title: string; href: string }[] = [
@@ -78,8 +78,8 @@ export function Header() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <Link href="/" className="flex items-center space-x-2">
-            <ClipboardCheck className="h-6 w-6 text-primary" />
-            <span className="text-2xl font-bold tracking-tight">WorkFlowZen</span>
+            <FlaskConical className="h-6 w-6 text-primary" />
+            <span className="text-2xl font-bold tracking-tight">BL-Research Flow</span>
         </Link>
     
         <NavigationMenu>

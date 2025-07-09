@@ -3,8 +3,8 @@ import './globals.css';
 import { Toaster } from "@/components/ui/toaster"
 
 export const metadata: Metadata = {
-  title: 'WorkFlowZen',
-  description: 'Streamline your tasks and boost your productivity.',
+  title: 'BL-Research Flow',
+  description: 'A research and task management tool.',
 };
 
 export default function RootLayout({
