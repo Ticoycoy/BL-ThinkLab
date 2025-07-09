@@ -1,13 +1,14 @@
 "use client";
 
 import { useState } from "react";
+import Image from "next/image";
 import { signInWithEmailAndPassword, createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
 import { auth, db } from "@/lib/firebase";
 import { doc, setDoc } from "firebase/firestore";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { FlaskConical, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
 export function LoginForm() {
@@ -99,9 +100,14 @@ export function LoginForm() {
 
   return (
     <div className="flex flex-col gap-6">
-      <div className="flex items-center gap-2">
-          <FlaskConical className="h-8 w-8 text-primary" />
-          <span className="text-2xl font-bold">BL-Research Flow</span>
+      <div className="flex items-center">
+        <Image
+          src="/brightlocal-logo.png"
+          alt="WorkFlowZen Logo"
+          width={200}
+          height={45}
+          className="object-contain"
+        />
       </div>
       <div className="text-left">
           <h1 className="text-2xl font-bold tracking-tight">{isLogin ? 'Welcome Back!' : 'Create an Account'}</h1>

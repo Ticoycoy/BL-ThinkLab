@@ -16,7 +16,7 @@ export default function LoginPage() {
                 <h2 className="text-3xl font-semibold">
                 It's about what you make possible.
                 </h2>
-                <p className="text-xl text-primary-foreground/80">Welcome to BL-Research Flow!</p>
+                <p className="text-xl text-primary-foreground/80">Welcome to WorkFlowZen!</p>
             </div>
             <Image
                 src="https://placehold.co/400x300.png"

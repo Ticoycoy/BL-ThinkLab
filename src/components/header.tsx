@@ -2,6 +2,7 @@
 
 import * as React from "react";
 import Link from "next/link";
+import Image from "next/image";
 import { cn } from "@/lib/utils";
 import {
   NavigationMenu,
@@ -12,7 +13,7 @@ import {
   NavigationMenuTrigger,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { FlaskConical, LogOut } from "lucide-react";
+import { LogOut } from "lucide-react";
 import { useAuth } from "@/hooks/use-auth";
 import { Button } from "@/components/ui/button";
 
@@ -82,9 +83,14 @@ export function Header() {
     <header className="sticky top-0 z-40 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         <div className="flex items-center gap-6">
-            <Link href="/" className="flex items-center space-x-2">
-                <FlaskConical className="h-6 w-6 text-primary" />
-                <span className="text-2xl font-bold tracking-tight">BL-Research Flow</span>
+            <Link href="/" className="flex items-center">
+                <Image
+                    src="/brightlocal-logo.png"
+                    alt="WorkFlowZen Logo"
+                    width={140}
+                    height={30}
+                    className="object-contain"
+                />
             </Link>
         
             <NavigationMenu>
