@@ -26,28 +26,21 @@ export function LoginForm() {
     try {
       if (isLogin) {
         await signInWithEmailAndPassword(auth, email, password);
-        // The AuthProvider will handle the redirect
+        // The AuthProvider will handle the redirect on successful login.
       } else {
         await createUserWithEmailAndPassword(auth, email, password);
-        toast({
-          title: "Account Created",
-          description: "You've successfully signed up! Please log in to continue.",
-        });
-        setIsLogin(true); // Switch to login view after successful signup
+        // The AuthProvider will handle the redirect on successful sign-up.
       }
     } catch (error: any) {
       let errorMessage = "An unexpected error occurred.";
-      if (isLogin) {
-        if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
-          errorMessage = "Invalid email or password. Please try again.";
-        }
-      } else {
-        if (error.code === 'auth/email-already-in-use') {
-            errorMessage = "This email is already registered. Please log in.";
-        } else if (error.code === 'auth/weak-password') {
-            errorMessage = "Password is too weak. It should be at least 6 characters.";
-        }
+      if (error.code === 'auth/user-not-found' || error.code === 'auth/wrong-password' || error.code === 'auth/invalid-credential') {
+        errorMessage = "Invalid email or password. Please try again.";
+      } else if (error.code === 'auth/email-already-in-use') {
+        errorMessage = "This email is already registered. Please log in.";
+      } else if (error.code === 'auth/weak-password') {
+        errorMessage = "Password is too weak. It should be at least 6 characters.";
       }
+      
       toast({
         title: isLogin ? "Login Failed" : "Sign Up Failed",
         description: errorMessage,
