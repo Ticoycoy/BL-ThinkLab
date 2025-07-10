@@ -9,8 +9,8 @@ const firebaseConfig = {
   projectId: "research-web-app-4dcae",
   storageBucket: "research-web-app-4dcae.firebasestorage.app",
   messagingSenderId: "457765115395",
-  appId: "1:457765115395:web:4f459970895056545b6036",
-  measurementId: "G-30DK4KYDQM"
+  appId: "1:457765115395:web:949792375c5066e95b6036",
+  measurementId: "G-YJN3SNRM3R"
 };
 
 // Initialize Firebase
