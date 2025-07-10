@@ -34,7 +34,7 @@ export function LandingPage() {
         </div>
         <div className="flex justify-center">
             <Image
-                src="https://placehold.co/600x450.png"
+                src="/banner.jpg"
                 alt="BL ThinkLab Illustration"
                 width={600}
                 height={450}

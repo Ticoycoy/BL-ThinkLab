@@ -103,10 +103,10 @@ export function LoginForm() {
     <div className="flex flex-col gap-6">
       <Link href="/" className="flex items-center">
         <Image
-          src="https://placehold.co/400x200.png"
-          alt="WorkFlowZen Logo"
+          src="/research-logo.png"
+          alt="BL ThnkLab Logo"
           width={400}
-          height={200}
+          height={50}
           className="object-contain"
           data-ai-hint="logo"
         />
