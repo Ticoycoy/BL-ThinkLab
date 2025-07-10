@@ -13,8 +13,8 @@ export function LandingHeader() {
           Research Team
         </Link>
         <nav className="hidden md:flex items-center gap-6 text-sm font-medium">
-            <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">Home</Link>
-            <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">About</Link>
+            <Link href="/" className="text-muted-foreground transition-colors hover:text-foreground">Home</Link>
+            <Link href="/about" className="text-muted-foreground transition-colors hover:text-foreground">About</Link>
             <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">Services</Link>
             <Link href="#" className="text-muted-foreground transition-colors hover:text-foreground">Contact</Link>
         </nav>
