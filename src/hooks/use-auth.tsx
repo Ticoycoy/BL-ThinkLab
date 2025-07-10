@@ -18,6 +18,8 @@ const AuthContext = createContext<AuthContextType>({
   signOut: () => {},
 });
 
+const PUBLIC_PAGES = ['/', '/login', '/about'];
+
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
@@ -36,13 +38,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   useEffect(() => {
     if (loading) return;
 
-    const isAuthPage = pathname === '/login';
-    const isLandingPage = pathname === '/';
-    const isAppPage = !isLandingPage && !isAuthPage;
-
-    if (!user && isAppPage) {
+    const isPublicPage = PUBLIC_PAGES.includes(pathname);
+    
+    if (!user && !isPublicPage) {
       router.push('/login');
-    } else if (user && (isAuthPage || isLandingPage)) {
+    } else if (user && (pathname === '/login' || pathname === '/')) {
       router.push('/dashboard');
     }
   }, [user, loading, pathname, router]);
@@ -51,8 +51,8 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
     await firebaseSignOut(auth);
     router.push('/login');
   };
-
-  const isAppPage = !['/', '/login'].includes(pathname);
+  
+  const isAppPage = !PUBLIC_PAGES.includes(pathname);
 
   if (loading || (!user && isAppPage)) {
     return (
