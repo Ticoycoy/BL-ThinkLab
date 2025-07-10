@@ -17,7 +17,7 @@ import { format } from "date-fns";
 import type { Task, Team } from "@/types";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
-const TEAMS: Team[] = ['Research Team', 'Connection Team', 'Special task team'];
+const TEAMS: Team[] = ['BL ThinkLab', 'Connection Team', 'Special task team'];
 
 const taskSchema = z.object({
   name: z.string().min(3, "Task name must be at least 3 characters long."),

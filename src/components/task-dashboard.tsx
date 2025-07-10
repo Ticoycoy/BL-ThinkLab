@@ -18,7 +18,7 @@ const statusDisplay: Record<TaskStatus, string> = {
   Done: "Done",
 };
 
-const TEAMS: Team[] = ["Research Team", "Connection Team", "Special task team"];
+const TEAMS: Team[] = ["BL ThinkLab", "Connection Team", "Special task team"];
 const STATUS_ORDER: TaskStatus[] = ["Pending", "Working", "QA", "Done"];
 
 

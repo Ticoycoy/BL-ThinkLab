@@ -1,4 +1,4 @@
-export type Team = 'Research Team' | 'Connection Team' | 'Special task team';
+export type Team = 'BL ThinkLab' | 'Connection Team' | 'Special task team';
 
 export type TaskStatus = 'Pending' | 'Working' | 'QA' | 'Done';
 
