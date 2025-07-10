@@ -1,3 +1,4 @@
+
 "use client";
 
 import React, { createContext, useContext, useEffect, useState } from 'react';
@@ -18,7 +19,7 @@ const AuthContext = createContext<AuthContextType>({
   signOut: () => {},
 });
 
-const PUBLIC_PAGES = ['/', '/login', '/about'];
+const PUBLIC_PAGES = ['/', '/login', '/about', '/services'];
 
 export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
